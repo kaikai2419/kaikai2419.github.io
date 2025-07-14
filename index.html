@@ -62,7 +62,7 @@
       const name = document.getElementById("name").value;
       const message = document.getElementById("message").value;
 
-      fetch("https://mywebsite-47mn.onrender.com/add", {
+      fetch("/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
