@@ -2,37 +2,83 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <title>我的專題網站</title>
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/29/29302.png" type="image/png">
+  <title>留言板</title>
   <style>
     body {
-      background-color: #f7f7f7;
-      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-      text-align: center;
+      padding: 40px;
     }
-
     h1 {
       color: #333;
-      font-size: 3em;
-      margin-bottom: 10px;
     }
-
-    p {
-      color: #666;
-      font-size: 1.5em;
-      max-width: 600px;
-      line-height: 1.6;
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 300px;
+    }
+    input, textarea {
+      width: 100%;
+      margin: 10px 0;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      padding: 10px;
+      width: 100%;
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    #response {
+      margin-top: 20px;
+      color: green;
     }
   </style>
 </head>
 <body>
-  <h1>📘 歡迎來到我的專題網站</h1>
-  <p>這裡是我們的專題展示頁面，歡迎點閱與指教！</p>
+
+  <h1>留言板</h1>
+  <form id="messageForm">
+    <input type="text" id="name" placeholder="你的名字" required>
+    <textarea id="message" rows="4" placeholder="請輸入留言..." required></textarea>
+    <button type="submit">送出留言</button>
+  </form>
+
+  <div id="response"></div>
+
+  <script>
+    document.getElementById("messageForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const message = document.getElementById("message").value;
+
+      fetch("http://localhost:5000/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name, message })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("response").innerText = `✅ 成功送出：${data.name}`;
+        document.getElementById("messageForm").reset();
+      })
+      .catch(err => {
+        document.getElementById("response").innerText = "❌ 發送失敗：" + err.message;
+      });
+    });
+  </script>
+
 </body>
 </html>
